@@ -94,8 +94,8 @@ export default function AIInvigilator({ onWarning, isActive }: AIInvigilatorProp
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close().catch(console.error);
       }
     };
   }, [isActive, onWarning]);
