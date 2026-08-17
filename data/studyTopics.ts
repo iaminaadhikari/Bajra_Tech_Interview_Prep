@@ -59,5 +59,29 @@ export const studyTopics: StudyTopic[] = [
     title: "Information Architecture (IA)",
     category: "UI/UX",
     content: "IA is the science of organizing and structuring content in a logical, user-friendly way. Good IA helps users find information intuitively. It involves creating site maps, defining navigation menus, and categorizing content hierarchically."
+  },
+  {
+    id: "t10",
+    title: "Usability Testing (A/B Testing, Heatmaps, Heuristic Evaluation)",
+    category: "UI/UX",
+    content: "**A/B Testing** compares two versions of a design to see which performs better. **Heatmaps** visually represent where users click, scroll, or hover the most. **Heuristic Evaluation** is an expert review against established usability guidelines (heuristics) without requiring actual users."
+  },
+  {
+    id: "t11",
+    title: "Interaction Design (Micro-interactions & Affordances)",
+    category: "UI/UX",
+    content: "**Micro-interactions** are small, subtle animations or visual responses (like a heart turning red when liked) that provide immediate feedback. **Affordances** are visual clues in a design (like a drop shadow on a button) that tell the user how to interact with it."
+  },
+  {
+    id: "t12",
+    title: "Visual Design (Contrast & Typography)",
+    category: "UI/UX",
+    content: "Good visual design heavily relies on **Typography Hierarchy** (using size, weight, and color to guide the eye) and **Contrast Ratios**. According to WCAG, normal text should have a minimum contrast ratio of 4.5:1 against its background, while large text requires 3:1."
+  },
+  {
+    id: "t13",
+    title: "UX Research (Personas vs. Profiles)",
+    category: "UI/UX",
+    content: "A **User Profile** is purely demographic or statistical data (e.g., '25-34 year old females in urban areas'). A **User Persona** is a fictional character built from research that humanizes the user group, detailing their goals, frustrations, and behaviors to guide design decisions."
   }
 ];
