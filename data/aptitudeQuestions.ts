@@ -1,6 +1,6 @@
 export interface Question {
   id: string;
-  category: 'Logical Reasoning' | 'Quantitative Aptitude' | 'Verbal Ability' | 'UI/UX Problem Solving';
+  category: string;
   question: string;
   options: string[];
   correctAnswer: string;
