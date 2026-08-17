@@ -64,7 +64,7 @@ export default function AIInvigilator({ onWarning, isActive }: AIInvigilatorProp
     const monitorAudio = () => {
       if (!analyserRef.current || !dataArrayRef.current) return;
       
-      analyserRef.current.getByteFrequencyData(dataArrayRef.current);
+      analyserRef.current.getByteFrequencyData(dataArrayRef.current as any);
       
       // Calculate average volume
       let sum = 0;
