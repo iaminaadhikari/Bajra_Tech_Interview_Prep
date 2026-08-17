@@ -85,7 +85,10 @@ export default function QuizEngine({ questions, setId }: QuizEngineProps) {
         setHasStarted(true);
       } catch (err) {
         alert("You must allow fullscreen to start the test.");
+        console.error(err);
       }
+    } else {
+      alert("Container not found");
     }
   };
 
@@ -117,205 +120,214 @@ export default function QuizEngine({ questions, setId }: QuizEngineProps) {
     setScore(newScore);
   };
 
-  if (isDisqualified) {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    }
-    return (
-      <div className={styles.resultsContainer}>
-        <div className={`glass-panel ${styles.scoreCard}`} style={{ borderLeft: '4px solid var(--error-color)' }}>
-          <h2>Test Terminated</h2>
-          <AlertTriangle size={64} color="var(--error-color)" />
-          <h3 style={{ color: 'var(--error-color)' }}>Disqualified by AI Invigilator</h3>
-          <p>You have accumulated 3 or more warnings for breaking the testing environment rules.</p>
-          
-          <div style={{ textAlign: 'left', background: 'rgba(239,68,68,0.1)', padding: '16px', borderRadius: '8px', width: '100%', marginTop: '16px' }}>
-            <h4>Warning Log:</h4>
-            <ul style={{ paddingLeft: '24px', marginTop: '8px', color: 'var(--text-secondary)' }}>
-              {warnings.map((w, i) => (
-                <li key={i}>{w.time.toLocaleTimeString()}: {w.reason}</li>
-              ))}
-            </ul>
-          </div>
-
-          <button className="btn-primary" onClick={() => router.push('/practice')}>
-            Return to Practice Sets
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (isSubmitted) {
-    const percentage = Math.round((score / questions.length) * 100);
-    return (
-      <div className={styles.resultsContainer}>
-        <div className={`glass-panel ${styles.scoreCard}`}>
-          <h2>Test Completed: Model Set {setId}</h2>
-          <div className={styles.scoreCircle}>
-            <span className={styles.scoreText}>{score}/{questions.length}</span>
-            <span className={styles.percentageText}>{percentage}%</span>
-          </div>
-          {warnings.length > 0 && (
-             <div style={{ color: 'var(--text-secondary)' }}>
-                You received {warnings.length} warning(s) during this test.
-             </div>
-          )}
-          <p>{percentage >= 70 ? 'Great job! You are well prepared.' : 'Keep practicing to improve your score.'}</p>
-          <button className="btn-primary" onClick={() => router.push('/practice')}>
-            Return to Practice Sets
-          </button>
-        </div>
-
-        <div className={styles.reviewSection}>
-          <h3>Review Your Answers</h3>
-          {questions.map((q, idx) => {
-            const userAnswer = answers[q.id];
-            const isCorrect = userAnswer === q.correctAnswer;
+  // Helper to render the actual content based on state
+  const renderContent = () => {
+    if (isDisqualified) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      return (
+        <div className={styles.resultsContainer}>
+          <div className={`glass-panel ${styles.scoreCard}`} style={{ borderLeft: '4px solid var(--error-color)' }}>
+            <h2>Test Terminated</h2>
+            <AlertTriangle size={64} color="var(--error-color)" />
+            <h3 style={{ color: 'var(--error-color)' }}>Disqualified by AI Invigilator</h3>
+            <p>You have accumulated 3 or more warnings for breaking the testing environment rules.</p>
             
-            return (
-              <div key={q.id} className={`glass-panel ${styles.reviewCard} ${isCorrect ? styles.correctCard : styles.incorrectCard}`}>
-                <div className={styles.reviewHeader}>
-                  <span className={styles.qNum}>Question {idx + 1}</span>
-                  {isCorrect ? <CheckCircle color="var(--success-color)" /> : <XCircle color="var(--error-color)" />}
-                </div>
-                <p className={styles.reviewQuestion}>{q.question}</p>
-                <div className={styles.reviewAnswers}>
-                  <div className={styles.yourAnswer}>
-                    <strong>Your Answer:</strong> {userAnswer || 'Not answered'}
-                  </div>
-                  {!isCorrect && (
-                    <div className={styles.correctAnswer}>
-                      <strong>Correct Answer:</strong> {q.correctAnswer}
-                    </div>
-                  )}
-                </div>
-                <div className={styles.explanation}>
-                  <strong>Explanation:</strong> {q.explanation}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
+            <div style={{ textAlign: 'left', background: 'rgba(239,68,68,0.1)', padding: '16px', borderRadius: '8px', width: '100%', marginTop: '16px' }}>
+              <h4>Warning Log:</h4>
+              <ul style={{ paddingLeft: '24px', marginTop: '8px', color: 'var(--text-secondary)' }}>
+                {warnings.map((w, i) => (
+                  <li key={i}>{w.time.toLocaleTimeString()}: {w.reason}</li>
+                ))}
+              </ul>
+            </div>
 
-  if (!hasStarted) {
-    return (
-      <div className={styles.resultsContainer}>
-        <div className={`glass-panel ${styles.scoreCard}`}>
-          <h2>Ready to Begin?</h2>
-          <p>This test simulates the Bajra Technologies proctored environment. You must grant camera and microphone access, and the test will run in fullscreen mode.</p>
-          <ul style={{ textAlign: 'left', color: 'var(--text-secondary)', padding: '0 24px', margin: '16px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <li>🔴 Switching tabs will trigger a warning.</li>
-            <li>🔴 Exiting fullscreen will trigger a warning.</li>
-            <li>🔴 Loud background noise will trigger a warning.</li>
-            <li>⚠️ 3 warnings will result in immediate disqualification.</li>
-          </ul>
-          <button className="btn-primary" onClick={startTest}>
-            <Maximize size={18} /> Enter Fullscreen & Start Test
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const currentQuestion = questions[currentQuestionIdx];
-
-  return (
-    <div ref={containerRef} className={styles.fullscreenWrapper}>
-      <AIInvigilator isActive={hasStarted && !isSubmitted && !isDisqualified} onWarning={handleWarning} />
-      
-      <div className={styles.engineContainer}>
-        {warnings.length > 0 && (
-          <div className={styles.warningBanner}>
-            <AlertTriangle size={18} />
-            Warning {warnings.length}/3: {warnings[warnings.length - 1].reason}
-          </div>
-        )}
-
-        <div className={styles.header}>
-          <h2>Model Set {setId}</h2>
-          <div className={`${styles.timer} ${timeLeft < 300 ? styles.timerWarning : ''}`}>
-            <Clock size={20} />
-            <span>{formatTime(timeLeft)}</span>
+            <button className="btn-primary" onClick={() => router.push('/practice')}>
+              Return to Practice Sets
+            </button>
           </div>
         </div>
+      );
+    }
 
-        <div className={styles.progressContainer}>
-          <div 
-            className={styles.progressBar} 
-            style={{ width: `${((currentQuestionIdx + 1) / questions.length) * 100}%` }}
-          />
-        </div>
+    if (isSubmitted) {
+      const percentage = Math.round((score / questions.length) * 100);
+      return (
+        <div className={styles.resultsContainer}>
+          <div className={`glass-panel ${styles.scoreCard}`}>
+            <h2>Test Completed: Model Set {setId}</h2>
+            <div className={styles.scoreCircle}>
+              <span className={styles.scoreText}>{score}/{questions.length}</span>
+              <span className={styles.percentageText}>{percentage}%</span>
+            </div>
+            {warnings.length > 0 && (
+               <div style={{ color: 'var(--text-secondary)' }}>
+                  You received {warnings.length} warning(s) during this test.
+               </div>
+            )}
+            <p>{percentage >= 70 ? 'Great job! You are well prepared.' : 'Keep practicing to improve your score.'}</p>
+            <button className="btn-primary" onClick={() => router.push('/practice')}>
+              Return to Practice Sets
+            </button>
+          </div>
 
-        <div className={`glass-panel ${styles.questionCard}`}>
-          <div className={styles.categoryBadge}>{currentQuestion.category}</div>
-          <h3 className={styles.questionText}>
-            <span className={styles.qNum}>Q{currentQuestionIdx + 1}.</span> {currentQuestion.question}
-          </h3>
-
-          <div className={styles.optionsList}>
-            {currentQuestion.options.map((option, idx) => {
-              const isSelected = answers[currentQuestion.id] === option;
+          <div className={styles.reviewSection}>
+            <h3>Review Your Answers</h3>
+            {questions.map((q, idx) => {
+              const userAnswer = answers[q.id];
+              const isCorrect = userAnswer === q.correctAnswer;
+              
               return (
-                <button
-                  key={idx}
-                  className={`${styles.optionBtn} ${isSelected ? styles.selectedOption : ''}`}
-                  onClick={() => handleSelectAnswer(option)}
-                >
-                  <div className={styles.optionMarker}>{String.fromCharCode(65 + idx)}</div>
-                  <div className={styles.optionText}>{option}</div>
-                </button>
+                <div key={q.id} className={`glass-panel ${styles.reviewCard} ${isCorrect ? styles.correctCard : styles.incorrectCard}`}>
+                  <div className={styles.reviewHeader}>
+                    <span className={styles.qNum}>Question {idx + 1}</span>
+                    {isCorrect ? <CheckCircle color="var(--success-color)" /> : <XCircle color="var(--error-color)" />}
+                  </div>
+                  <p className={styles.reviewQuestion}>{q.question}</p>
+                  <div className={styles.reviewAnswers}>
+                    <div className={styles.yourAnswer}>
+                      <strong>Your Answer:</strong> {userAnswer || 'Not answered'}
+                    </div>
+                    {!isCorrect && (
+                      <div className={styles.correctAnswer}>
+                        <strong>Correct Answer:</strong> {q.correctAnswer}
+                      </div>
+                    )}
+                  </div>
+                  <div className={styles.explanation}>
+                    <strong>Explanation:</strong> {q.explanation}
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
+      );
+    }
 
-        <div className={styles.navigation}>
-          <button 
-            className="btn-outline" 
-            disabled={currentQuestionIdx === 0}
-            onClick={() => setCurrentQuestionIdx(prev => prev - 1)}
-          >
-            Previous
-          </button>
+    if (!hasStarted) {
+      return (
+        <div className={styles.resultsContainer}>
+          <div className={`glass-panel ${styles.scoreCard}`}>
+            <h2>Ready to Begin?</h2>
+            <p>This test simulates the Bajra Technologies proctored environment. You must grant camera and microphone access, and the test will run in fullscreen mode.</p>
+            <ul style={{ textAlign: 'left', color: 'var(--text-secondary)', padding: '0 24px', margin: '16px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <li>🔴 Switching tabs will trigger a warning.</li>
+              <li>🔴 Exiting fullscreen will trigger a warning.</li>
+              <li>🔴 Loud background noise will trigger a warning.</li>
+              <li>⚠️ 3 warnings will result in immediate disqualification.</li>
+            </ul>
+            <button className="btn-primary" onClick={startTest}>
+              <Maximize size={18} /> Enter Fullscreen & Start Test
+            </button>
+          </div>
+        </div>
+      );
+    }
 
-          {currentQuestionIdx < questions.length - 1 ? (
-            <button 
-              className="btn-primary" 
-              onClick={() => setCurrentQuestionIdx(prev => prev + 1)}
-            >
-              Next Question
-            </button>
-          ) : (
-            <button 
-              className="btn-primary" 
-              style={{ background: 'var(--success-color)' }}
-              onClick={handleSubmit}
-            >
-              Submit Test
-            </button>
+    const currentQuestion = questions[currentQuestionIdx];
+
+    return (
+      <>
+        <AIInvigilator isActive={hasStarted && !isSubmitted && !isDisqualified} onWarning={handleWarning} />
+        
+        <div className={styles.engineContainer}>
+          {warnings.length > 0 && (
+            <div className={styles.warningBanner}>
+              <AlertTriangle size={18} />
+              Warning {warnings.length}/3: {warnings[warnings.length - 1].reason}
+            </div>
           )}
-        </div>
 
-        <div className={styles.questionNav}>
-          {questions.map((q, idx) => (
-            <button
-              key={q.id}
-              className={`
-                ${styles.navDot} 
-                ${idx === currentQuestionIdx ? styles.activeDot : ''} 
-                ${answers[q.id] ? styles.answeredDot : ''}
-              `}
-              onClick={() => setCurrentQuestionIdx(idx)}
+          <div className={styles.header}>
+            <h2>Model Set {setId}</h2>
+            <div className={`${styles.timer} ${timeLeft < 300 ? styles.timerWarning : ''}`}>
+              <Clock size={20} />
+              <span>{formatTime(timeLeft)}</span>
+            </div>
+          </div>
+
+          <div className={styles.progressContainer}>
+            <div 
+              className={styles.progressBar} 
+              style={{ width: `${((currentQuestionIdx + 1) / questions.length) * 100}%` }}
+            />
+          </div>
+
+          <div className={`glass-panel ${styles.questionCard}`}>
+            <div className={styles.categoryBadge}>{currentQuestion.category}</div>
+            <h3 className={styles.questionText}>
+              <span className={styles.qNum}>Q{currentQuestionIdx + 1}.</span> {currentQuestion.question}
+            </h3>
+
+            <div className={styles.optionsList}>
+              {currentQuestion.options.map((option, idx) => {
+                const isSelected = answers[currentQuestion.id] === option;
+                return (
+                  <button
+                    key={idx}
+                    className={`${styles.optionBtn} ${isSelected ? styles.selectedOption : ''}`}
+                    onClick={() => handleSelectAnswer(option)}
+                  >
+                    <div className={styles.optionMarker}>{String.fromCharCode(65 + idx)}</div>
+                    <div className={styles.optionText}>{option}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className={styles.navigation}>
+            <button 
+              className="btn-outline" 
+              disabled={currentQuestionIdx === 0}
+              onClick={() => setCurrentQuestionIdx(prev => prev - 1)}
             >
-              {idx + 1}
+              Previous
             </button>
-          ))}
+
+            {currentQuestionIdx < questions.length - 1 ? (
+              <button 
+                className="btn-primary" 
+                onClick={() => setCurrentQuestionIdx(prev => prev + 1)}
+              >
+                Next Question
+              </button>
+            ) : (
+              <button 
+                className="btn-primary" 
+                style={{ background: 'var(--success-color)' }}
+                onClick={handleSubmit}
+              >
+                Submit Test
+              </button>
+            )}
+          </div>
+
+          <div className={styles.questionNav}>
+            {questions.map((q, idx) => (
+              <button
+                key={q.id}
+                className={`
+                  ${styles.navDot} 
+                  ${idx === currentQuestionIdx ? styles.activeDot : ''} 
+                  ${answers[q.id] ? styles.answeredDot : ''}
+                `}
+                onClick={() => setCurrentQuestionIdx(idx)}
+              >
+                {idx + 1}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </>
+    );
+  };
+
+  return (
+    <div ref={containerRef} className={hasStarted ? styles.fullscreenWrapper : ''}>
+      {renderContent()}
     </div>
   );
 }
