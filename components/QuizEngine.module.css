@@ -1,3 +1,24 @@
+.fullscreenWrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-color);
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+.warningBanner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error-color);
+  color: var(--error-color);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  animation: slideDown 0.3s ease-out;
+}
+
 .engineContainer {
   display: flex;
   flex-direction: column;
