@@ -1,0 +1,252 @@
+.engineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.timerWarning {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error-color);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+.progressContainer {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.questionCard {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.categoryBadge {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.questionText {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.qNum {
+  color: var(--accent-color);
+  margin-right: 8px;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.optionBtn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.optionBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.selectedOption {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: var(--accent-color);
+}
+
+.optionMarker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.selectedOption .optionMarker {
+  background: var(--accent-color);
+  color: white;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.questionNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.navDot {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.answeredDot {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.activeDot {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Results Styles */
+.resultsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scoreCard {
+  padding: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.scoreCircle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 8px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreText {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.percentageText {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.reviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reviewCard {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.correctCard {
+  border-left: 4px solid var(--success-color);
+}
+
+.incorrectCard {
+  border-left: 4px solid var(--error-color);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.reviewQuestion {
+  font-size: 1.1rem;
+}
+
+.reviewAnswers {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.explanation {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  background: rgba(59, 130, 246, 0.05);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}

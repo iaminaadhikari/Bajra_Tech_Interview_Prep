@@ -1,0 +1,84 @@
+.card {
+  padding: 24px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  user-select: none;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.questionSection {
+  display: flex;
+  gap: 12px;
+}
+
+.qNum {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.questionText {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.toggleBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.card:hover .toggleBtn {
+  color: var(--text-primary);
+}
+
+.answerSection {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.answerLabel {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--success-color);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.answerText {
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 1rem;
+}
