@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Book, MonitorPlay, MessageSquare } from 'lucide-react';
+import { ArrowRight, Book, MonitorPlay, MessageSquare, PenTool } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function Home() {
