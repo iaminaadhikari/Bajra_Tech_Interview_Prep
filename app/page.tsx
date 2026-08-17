@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Book, MonitorPlay, MessageSquare, PenTool } from 'lucide-react';
+import { ArrowRight, Book, MonitorPlay, MessageSquare, PenTool, LayoutTemplate } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -25,6 +25,15 @@ export default function Home() {
             <h2>Study Topics</h2>
             <p>Review core concepts like Syllogisms, Gestalt Principles, and UI/UX terminology.</p>
             <Link href="/topics" className={styles.cardLink}>Read Topics &rarr;</Link>
+          </div>
+        </div>
+
+        <div className="glass-panel">
+          <div className={styles.cardContent}>
+            <div className={styles.iconWrapper}><LayoutTemplate size={24} /></div>
+            <h2>UI/UX Bank</h2>
+            <p>Specific UI/UX questions for targeted practice to sharpen your design problem-solving skills.</p>
+            <Link href="/uiux-bank" className={styles.cardLink}>View Questions &rarr;</Link>
           </div>
         </div>
 
